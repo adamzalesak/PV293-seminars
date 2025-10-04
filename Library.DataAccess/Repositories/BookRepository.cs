@@ -4,57 +4,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Library.DataAccess.Repositories;
 
-public class BookRepository : IBookRepository
+public class BookRepository : Repository<Book>, IBookRepository
 {
-    private readonly ApplicationDbContext _context;
-
-    public BookRepository(ApplicationDbContext context)
+    public BookRepository(ApplicationDbContext context) : base(context)
     {
-        _context = context;
     }
 
-    public async Task<List<Book>> GetAllAsync()
+    public async Task<IEnumerable<Book>> GetBooksByAuthorAsync(string author)
     {
-        return await _context.Books.ToListAsync();
+        return await Entities
+            .Where(b => b.Author.Contains(author))
+            .ToListAsync();
     }
 
-    public async Task<Book?> GetByIdAsync(int id)
+    public async Task<IEnumerable<Book>> GetBooksByGenreAsync(string genre)
     {
-        return await _context.Books.FindAsync(id);
+        return await Entities
+            .Where(b => b.Genre.Equals(genre, StringComparison.OrdinalIgnoreCase))
+            .ToListAsync();
     }
 
-    public async Task<Book> AddAsync(Book book)
+    public async Task<Book?> GetBookByIsbnAsync(string isbn)
     {
-        _context.Books.Add(book);
-        await _context.SaveChangesAsync();
-        return book;
+        return await Entities
+            .FirstOrDefaultAsync(b => b.ISBN == isbn);
     }
 
-    public async Task<Book?> UpdateAsync(int id, Book book)
-    {
-        var existingBook = await _context.Books.FindAsync(id);
-        if (existingBook == null)
-            return null;
-
-        existingBook.Title = book.Title;
-        existingBook.Author = book.Author;
-        existingBook.ISBN = book.ISBN;
-        existingBook.Year = book.Year;
-        existingBook.Pages = book.Pages;
-        existingBook.Genre = book.Genre;
-
-        await _context.SaveChangesAsync();
-        return existingBook;
-    }
-
-    public async Task<bool> DeleteAsync(int id)
-    {
-        var book = await _context.Books.FindAsync(id);
-        if (book == null)
-            return false;
-
-        _context.Books.Remove(book);
-        await _context.SaveChangesAsync();
-        return true;
-    }
+    private ApplicationDbContext ApplicationDbContext => (ApplicationDbContext)Context;
 }

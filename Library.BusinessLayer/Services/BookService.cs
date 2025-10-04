@@ -1,16 +1,19 @@
 using Library.BusinessLayer.Dtos;
 using Library.DataAccess.Entities;
 using Library.DataAccess.Repositories;
+using Library.DataAccess.UnitOfWork;
 
 namespace Library.BusinessLayer.Services;
 
 public class BookService : IBookService
 {
     private readonly IBookRepository _bookRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public BookService(IBookRepository bookRepository)
+    public BookService(IBookRepository bookRepository, IUnitOfWork unitOfWork)
     {
         _bookRepository = bookRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<List<BookDto>> GetAllBooksAsync()
@@ -34,8 +37,10 @@ public class BookService : IBookService
             throw new ArgumentException("Book author is required", nameof(bookDto.Author));
 
         var book = MapToEntity(bookDto);
-        var createdBook = await _bookRepository.AddAsync(book);
-        return MapToDto(createdBook);
+        _bookRepository.Add(book);
+        await _unitOfWork.CompleteAsync();
+
+        return MapToDto(book);
     }
 
     public async Task<BookDto?> UpdateBookAsync(int id, BookDto bookDto)
@@ -46,14 +51,32 @@ public class BookService : IBookService
         if (string.IsNullOrWhiteSpace(bookDto.Author))
             throw new ArgumentException("Book author is required", nameof(bookDto.Author));
 
-        var book = MapToEntity(bookDto);
-        var updatedBook = await _bookRepository.UpdateAsync(id, book);
-        return updatedBook != null ? MapToDto(updatedBook) : null;
+        var existingBook = await _bookRepository.GetByIdAsync(id);
+        if (existingBook == null)
+            return null;
+
+        existingBook.Title = bookDto.Title;
+        existingBook.Author = bookDto.Author;
+        existingBook.ISBN = bookDto.ISBN;
+        existingBook.Year = bookDto.Year;
+        existingBook.Pages = bookDto.Pages;
+        existingBook.Genre = bookDto.Genre;
+
+        _bookRepository.Update(existingBook);
+        await _unitOfWork.CompleteAsync();
+
+        return MapToDto(existingBook);
     }
 
     public async Task<bool> DeleteBookAsync(int id)
     {
-        return await _bookRepository.DeleteAsync(id);
+        var book = await _bookRepository.GetByIdAsync(id);
+        if (book == null)
+            return false;
+
+        _bookRepository.Remove(book);
+        await _unitOfWork.CompleteAsync();
+        return true;
     }
 
     private static BookDto MapToDto(Book book)

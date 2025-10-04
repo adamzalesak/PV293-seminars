@@ -2,6 +2,7 @@ using Library.API.Endpoints;
 using Library.BusinessLayer.Services;
 using Library.DataAccess.Data;
 using Library.DataAccess.Repositories;
+using Library.DataAccess.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,8 +23,9 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=library.db"));
 
-// Register services
+// Register Repositories, Unit of Work and Services
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBookService, BookService>();
 
 var app = builder.Build();
