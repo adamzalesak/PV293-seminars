@@ -1,3 +1,4 @@
+using Library.BusinessLayer.Dtos;
 using Library.DataAccess.Entities;
 using Library.DataAccess.Repositories;
 
@@ -12,40 +13,74 @@ public class BookService : IBookService
         _bookRepository = bookRepository;
     }
 
-    public async Task<List<Book>> GetAllBooksAsync()
+    public async Task<List<BookDto>> GetAllBooksAsync()
     {
-        return await _bookRepository.GetAllAsync();
+        var books = await _bookRepository.GetAllAsync();
+        return books.Select(MapToDto).ToList();
     }
 
-    public async Task<Book?> GetBookByIdAsync(int id)
+    public async Task<BookDto?> GetBookByIdAsync(int id)
     {
-        return await _bookRepository.GetByIdAsync(id);
+        var book = await _bookRepository.GetByIdAsync(id);
+        return book != null ? MapToDto(book) : null;
     }
 
-    public async Task<Book> CreateBookAsync(Book book)
+    public async Task<BookDto> CreateBookAsync(BookDto bookDto)
     {
-        if (string.IsNullOrWhiteSpace(book.Title))
-            throw new ArgumentException("Book title is required", nameof(book.Title));
+        if (string.IsNullOrWhiteSpace(bookDto.Title))
+            throw new ArgumentException("Book title is required", nameof(bookDto.Title));
 
-        if (string.IsNullOrWhiteSpace(book.Author))
-            throw new ArgumentException("Book author is required", nameof(book.Author));
+        if (string.IsNullOrWhiteSpace(bookDto.Author))
+            throw new ArgumentException("Book author is required", nameof(bookDto.Author));
 
-        return await _bookRepository.AddAsync(book);
+        var book = MapToEntity(bookDto);
+        var createdBook = await _bookRepository.AddAsync(book);
+        return MapToDto(createdBook);
     }
 
-    public async Task<Book?> UpdateBookAsync(int id, Book book)
+    public async Task<BookDto?> UpdateBookAsync(int id, BookDto bookDto)
     {
-        if (string.IsNullOrWhiteSpace(book.Title))
-            throw new ArgumentException("Book title is required", nameof(book.Title));
+        if (string.IsNullOrWhiteSpace(bookDto.Title))
+            throw new ArgumentException("Book title is required", nameof(bookDto.Title));
 
-        if (string.IsNullOrWhiteSpace(book.Author))
-            throw new ArgumentException("Book author is required", nameof(book.Author));
+        if (string.IsNullOrWhiteSpace(bookDto.Author))
+            throw new ArgumentException("Book author is required", nameof(bookDto.Author));
 
-        return await _bookRepository.UpdateAsync(id, book);
+        var book = MapToEntity(bookDto);
+        var updatedBook = await _bookRepository.UpdateAsync(id, book);
+        return updatedBook != null ? MapToDto(updatedBook) : null;
     }
 
     public async Task<bool> DeleteBookAsync(int id)
     {
         return await _bookRepository.DeleteAsync(id);
+    }
+
+    private static BookDto MapToDto(Book book)
+    {
+        return new BookDto
+        {
+            Id = book.Id,
+            Title = book.Title,
+            Author = book.Author,
+            ISBN = book.ISBN,
+            Year = book.Year,
+            Pages = book.Pages,
+            Genre = book.Genre
+        };
+    }
+
+    private static Book MapToEntity(BookDto bookDto)
+    {
+        return new Book
+        {
+            Id = bookDto.Id,
+            Title = bookDto.Title,
+            Author = bookDto.Author,
+            ISBN = bookDto.ISBN,
+            Year = bookDto.Year,
+            Pages = bookDto.Pages,
+            Genre = bookDto.Genre
+        };
     }
 }

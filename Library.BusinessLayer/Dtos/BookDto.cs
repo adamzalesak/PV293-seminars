@@ -1,4 +1,4 @@
-namespace Library.API.Dtos;
+namespace Library.BusinessLayer.Dtos;
 
 public class BookDto
 {
