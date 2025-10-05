@@ -8,88 +8,106 @@ namespace Library.BusinessLayer.Services;
 public class BookService : IBookService
 {
     private readonly IBookRepository _bookRepository;
+    private readonly IAuthorRepository _authorRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public BookService(IBookRepository bookRepository, IUnitOfWork unitOfWork)
+    // This constructor is getting complex - a sign that MediatR would help!
+    public BookService(
+        IBookRepository bookRepository,
+        IAuthorRepository authorRepository,
+        IUnitOfWork unitOfWork)
     {
         _bookRepository = bookRepository;
+        _authorRepository = authorRepository;
         _unitOfWork = unitOfWork;
     }
 
     public async Task<List<BookDto>> GetAllBooksAsync()
     {
+        // What's the issue here? How would you refactor that?
         var books = await _bookRepository.GetAllAsync();
-        return books.Select(MapToDto).ToList();
-    }
+        var bookDtos = new List<BookDto>();
 
-    public async Task<BookDto?> GetBookByIdAsync(int id)
-    {
-        var book = await _bookRepository.GetByIdAsync(id);
-        return book != null ? MapToDto(book) : null;
+        foreach (var book in books)
+        {
+            var author = await _authorRepository.GetByIdAsync(book.AuthorId);
+            bookDtos.Add(MapToDto(book, author));
+        }
+
+        return bookDtos;
     }
 
     public async Task<BookDto> CreateBookAsync(BookDto bookDto)
     {
+        // This method is doing too much - violating SRP!
+        // With MediatR, this would be split into command handler and event handlers
+
         if (string.IsNullOrWhiteSpace(bookDto.Title))
             throw new ArgumentException("Book title is required", nameof(bookDto.Title));
 
-        if (string.IsNullOrWhiteSpace(bookDto.Author))
-            throw new ArgumentException("Book author is required", nameof(bookDto.Author));
+        if (bookDto.AuthorId <= 0)
+            throw new ArgumentException("Valid author ID is required", nameof(bookDto.AuthorId));
 
+        // 1. Validate author exists
+        var author = await _authorRepository.GetByIdAsync(bookDto.AuthorId);
+        if (author == null)
+            throw new ArgumentException($"Author with ID {bookDto.AuthorId} not found", nameof(bookDto.AuthorId));
+
+        // 2. Check for duplicate ISBN
+        var existingBooks = await _bookRepository.GetAllAsync();
+        if (existingBooks.Any(b => b.ISBN == bookDto.ISBN))
+            throw new ArgumentException($"Book with ISBN {bookDto.ISBN} already exists", nameof(bookDto.ISBN));
+
+        // 3. Create the book
         var book = MapToEntity(bookDto);
         _bookRepository.Add(book);
+
+        // 4. Update author statistics
+        // NOTE: This is a side effect that should be handled by a domain event!
+        // With MediatR, this would be: _mediator.Publish(new BookCreatedEvent(book.Id, author.Id));
+        // And a separate handler would update the author
+        author.TotalBooksPublished++;
+        author.LastPublishedDate = DateTime.UtcNow;
+
+        // Also update the author's most popular genre based on all their books
+        var authorBooks = await _bookRepository.GetAllAsync();
+        var authorBooksList = authorBooks.Where(b => b.AuthorId == author.Id).ToList();
+        if (authorBooksList.Any())
+        {
+            var mostPopularGenre = authorBooksList
+                .GroupBy(b => b.Genre)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.Key)
+                .FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(mostPopularGenre))
+            {
+                author.MostPopularGenre = mostPopularGenre;
+            }
+        }
+
+        _authorRepository.Update(author);
+
+        // 5. Save all changes
+        // NOTE: With MediatR pipeline behavior, this could be handled automatically
+        // through a TransactionalBehavior that wraps all handlers in a transaction
         await _unitOfWork.CompleteAsync();
 
-        return MapToDto(book);
+        return MapToDto(book, author);
     }
 
-    public async Task<BookDto?> UpdateBookAsync(int id, BookDto bookDto)
-    {
-        if (string.IsNullOrWhiteSpace(bookDto.Title))
-            throw new ArgumentException("Book title is required", nameof(bookDto.Title));
-
-        if (string.IsNullOrWhiteSpace(bookDto.Author))
-            throw new ArgumentException("Book author is required", nameof(bookDto.Author));
-
-        var existingBook = await _bookRepository.GetByIdAsync(id);
-        if (existingBook == null)
-            return null;
-
-        existingBook.Title = bookDto.Title;
-        existingBook.Author = bookDto.Author;
-        existingBook.ISBN = bookDto.ISBN;
-        existingBook.Year = bookDto.Year;
-        existingBook.Pages = bookDto.Pages;
-        existingBook.Genre = bookDto.Genre;
-
-        _bookRepository.Update(existingBook);
-        await _unitOfWork.CompleteAsync();
-
-        return MapToDto(existingBook);
-    }
-
-    public async Task<bool> DeleteBookAsync(int id)
-    {
-        var book = await _bookRepository.GetByIdAsync(id);
-        if (book == null)
-            return false;
-
-        _bookRepository.Remove(book);
-        await _unitOfWork.CompleteAsync();
-        return true;
-    }
-
-    private static BookDto MapToDto(Book book)
+    private static BookDto MapToDto(Book book, Author? author = null)
     {
         return new BookDto
         {
             Id = book.Id,
             Title = book.Title,
-            Author = book.Author,
+            AuthorId = book.AuthorId,
+            AuthorName = author?.Name ?? "Unknown",
             ISBN = book.ISBN,
             Year = book.Year,
             Pages = book.Pages,
-            Genre = book.Genre
+            Genre = book.Genre,
         };
     }
 
@@ -99,11 +117,11 @@ public class BookService : IBookService
         {
             Id = bookDto.Id,
             Title = bookDto.Title,
-            Author = bookDto.Author,
+            AuthorId = bookDto.AuthorId,
             ISBN = bookDto.ISBN,
             Year = bookDto.Year,
             Pages = bookDto.Pages,
-            Genre = bookDto.Genre
+            Genre = bookDto.Genre,
         };
     }
 }

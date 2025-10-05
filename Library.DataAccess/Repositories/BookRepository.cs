@@ -10,10 +10,10 @@ public class BookRepository : Repository<Book>, IBookRepository
     {
     }
 
-    public async Task<IEnumerable<Book>> GetBooksByAuthorAsync(string author)
+    public async Task<IEnumerable<Book>> GetBooksByAuthorIdAsync(int authorId)
     {
         return await Entities
-            .Where(b => b.Author.Contains(author))
+            .Where(b => b.AuthorId == authorId)
             .ToListAsync();
     }
 

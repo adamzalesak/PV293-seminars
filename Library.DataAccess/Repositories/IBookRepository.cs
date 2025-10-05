@@ -4,7 +4,7 @@ namespace Library.DataAccess.Repositories;
 
 public interface IBookRepository : IRepository<Book>
 {
-    Task<IEnumerable<Book>> GetBooksByAuthorAsync(string author);
+    Task<IEnumerable<Book>> GetBooksByAuthorIdAsync(int authorId);
     Task<IEnumerable<Book>> GetBooksByGenreAsync(string genre);
     Task<Book?> GetBookByIsbnAsync(string isbn);
 }

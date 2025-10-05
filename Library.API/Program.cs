@@ -23,9 +23,14 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=library.db"));
 
-// Register Repositories, Unit of Work and Services
+// Register Repositories
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+
+// Register Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Register Services
 builder.Services.AddScoped<IBookService, BookService>();
 
 var app = builder.Build();

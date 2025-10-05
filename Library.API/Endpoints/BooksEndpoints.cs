@@ -10,7 +10,7 @@ public static class BooksEndpoints
         app.MapGet("/api/books", GetBooks)
             .WithName("GetBooks")
             .WithOpenApi()
-            .Produces<List<BookDto>>(StatusCodes.Status200OK);
+            .Produces<List<BookDto>>();
 
         app.MapPost("/api/books", CreateBook)
             .WithName("CreateBook")
@@ -37,7 +37,7 @@ public static class BooksEndpoints
         {
             return Results.ValidationProblem(new Dictionary<string, string[]>
             {
-                { ex.ParamName ?? "Error", [ex.Message] }
+                { ex.ParamName ?? "Error", [ex.Message] },
             });
         }
     }
