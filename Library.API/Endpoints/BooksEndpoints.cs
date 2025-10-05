@@ -7,14 +7,16 @@ public static class BooksEndpoints
 {
     public static void MapBooksEndpoints(this WebApplication app)
     {
-        app.MapGet("/api/books", GetBooks)
+        var books = app.MapGroup("/api/books")
+            .WithName("Books")
+            .WithOpenApi();
+
+        books.MapGet("", GetBooks)
             .WithName("GetBooks")
-            .WithOpenApi()
             .Produces<List<BookDto>>();
 
-        app.MapPost("/api/books", CreateBook)
+        books.MapPost("", CreateBook)
             .WithName("CreateBook")
-            .WithOpenApi()
             .Accepts<BookDto>("application/json")
             .Produces<BookDto>(StatusCodes.Status201Created)
             .ProducesValidationProblem();
