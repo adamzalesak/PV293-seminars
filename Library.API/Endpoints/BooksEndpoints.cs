@@ -8,7 +8,7 @@ public static class BooksEndpoints
     public static void MapBooksEndpoints(this WebApplication app)
     {
         var books = app.MapGroup("/api/books")
-            .WithName("Books")
+            .WithTags("Books")
             .WithOpenApi();
 
         books.MapGet("", GetBooks)

@@ -11,7 +11,6 @@ public class BookService : IBookService
     private readonly IAuthorRepository _authorRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    // This constructor is getting complex - a sign that MediatR would help!
     public BookService(
         IBookRepository bookRepository,
         IAuthorRepository authorRepository,
@@ -39,8 +38,8 @@ public class BookService : IBookService
 
     public async Task<BookDto> CreateBookAsync(BookDto bookDto)
     {
-        // This method is doing too much - violating SRP!
-        // With MediatR, this would be split into command handler and event handlers
+        // This method is doing too much - violating SRP
+        // Could be split into command validator, command handler and event handlers
 
         if (string.IsNullOrWhiteSpace(bookDto.Title))
             throw new ArgumentException("Book title is required", nameof(bookDto.Title));
@@ -63,13 +62,13 @@ public class BookService : IBookService
         _bookRepository.Add(book);
 
         // 4. Update author statistics
-        // NOTE: This is a side effect that should be handled by a domain event!
+        // NOTE: This is a side effect that should be handled by a domain event
         // With MediatR, this would be: _mediator.Publish(new BookCreatedEvent(book.Id, author.Id));
-        // And a separate handler would update the author
+        // - And a separate handler would update the author
         author.TotalBooksPublished++;
         author.LastPublishedDate = DateTime.UtcNow;
 
-        // Also update the author's most popular genre based on all their books
+        // - Also update the author's most popular genre based on all their books
         var authorBooks = await _bookRepository.GetAllAsync();
         var authorBooksList = authorBooks.Where(b => b.AuthorId == author.Id).ToList();
         if (authorBooksList.Any())
