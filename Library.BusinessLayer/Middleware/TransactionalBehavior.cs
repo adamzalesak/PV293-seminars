@@ -2,7 +2,7 @@ using Library.BusinessLayer.CQRS;
 using Library.DataAccess.Data;
 using MediatR;
 
-namespace Library.BusinessLayer;
+namespace Library.BusinessLayer.Middleware;
 
 public sealed class TransactionalBehavior<TRequest, TResponse>(ApplicationDbContext dbContext)
     : IPipelineBehavior<TRequest, TResponse>

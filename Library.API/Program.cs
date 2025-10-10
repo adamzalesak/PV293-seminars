@@ -2,6 +2,7 @@ using FluentValidation;
 using Library.API.Endpoints;
 using Library.BusinessLayer;
 using Library.BusinessLayer.Books.Commands;
+using Library.BusinessLayer.Middleware;
 using Library.DataAccess.Data;
 using Library.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
