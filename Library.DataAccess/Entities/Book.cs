@@ -2,7 +2,7 @@ namespace Library.DataAccess.Entities;
 
 public class Book
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string ISBN { get; set; } = string.Empty;
     public int Year { get; set; }
@@ -10,7 +10,7 @@ public class Book
     public string Genre { get; set; } = string.Empty;
 
     // Foreign key
-    public int AuthorId { get; set; }
+    public Guid AuthorId { get; set; }
     // Navigation property
     public Author Author { get; set; } = null!;
 }

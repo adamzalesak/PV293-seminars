@@ -1,5 +1,8 @@
+using FluentValidation;
+using Library.BusinessLayer.Books.Commands;
+using Library.BusinessLayer.Books.Queries;
 using Library.BusinessLayer.Dtos;
-using Library.BusinessLayer.Services;
+using MediatR;
 
 namespace Library.API.Endpoints;
 
@@ -17,30 +20,35 @@ public static class BooksEndpoints
 
         books.MapPost("", CreateBook)
             .WithName("CreateBook")
-            .Accepts<BookDto>("application/json")
-            .Produces<BookDto>(StatusCodes.Status201Created)
+            .Accepts<CreateBookCommand>("application/json")
+            .Produces(StatusCodes.Status201Created)
             .ProducesValidationProblem();
     }
 
-    private static async Task<IResult> GetBooks(IBookService bookService)
+    private static async Task<IResult> GetBooks(IMediator mediator)
     {
-        var books = await bookService.GetAllBooksAsync();
+        var query = new GetAllBooksQuery();
+        var books = await mediator.Send(query);
         return Results.Ok(books);
     }
 
-    private static async Task<IResult> CreateBook(BookDto bookDto, IBookService bookService)
+    private static async Task<IResult> CreateBook(CreateBookCommand command, IMediator mediator)
     {
         try
         {
-            var createdBook = await bookService.CreateBookAsync(bookDto);
-            return Results.Created($"/api/books/{createdBook.Id}", createdBook);
+            var id = await mediator.Send(command);
+            return Results.Created($"/api/books/{id}", new { id });
         }
-        catch (ArgumentException ex)
+        catch (ValidationException ex)
         {
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-            {
-                { ex.ParamName ?? "Error", [ex.Message] },
-            });
+            var errors = ex.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(e => e.ErrorMessage).ToArray()
+                );
+
+            return Results.ValidationProblem(errors);
         }
     }
 }

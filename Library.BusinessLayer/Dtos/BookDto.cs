@@ -2,7 +2,7 @@ namespace Library.BusinessLayer.Dtos;
 
 public class BookDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string ISBN { get; set; } = string.Empty;
     public int Year { get; set; }
@@ -10,6 +10,6 @@ public class BookDto
     public string Genre { get; set; } = string.Empty;
 
     // Author information
-    public int AuthorId { get; set; }
+    public Guid AuthorId { get; set; }
     public string AuthorName { get; set; } = string.Empty;
 }

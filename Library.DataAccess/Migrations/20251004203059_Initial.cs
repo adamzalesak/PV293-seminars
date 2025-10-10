@@ -17,8 +17,7 @@ namespace Library.DataAccess.Migrations
                 name: "Authors",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Biography = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
                     BirthDate = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -36,14 +35,13 @@ namespace Library.DataAccess.Migrations
                 name: "Books",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     ISBN = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
                     Year = table.Column<int>(type: "INTEGER", nullable: false),
                     Pages = table.Column<int>(type: "INTEGER", nullable: false),
                     Genre = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    AuthorId = table.Column<int>(type: "INTEGER", nullable: false)
+                    AuthorId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,9 +59,9 @@ namespace Library.DataAccess.Migrations
                 columns: new[] { "Id", "Biography", "BirthDate", "Country", "LastPublishedDate", "MostPopularGenre", "Name", "TotalBooksPublished" },
                 values: new object[,]
                 {
-                    { 1, "Software engineer and author, known for Clean Code", new DateTime(1952, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "USA", null, "Programming", "Robert C. Martin", 1 },
-                    { 2, "Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides", new DateTime(1960, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Various", null, "Programming", "Gang of Four", 1 },
-                    { 3, "Authors of The Pragmatic Programmer", new DateTime(1965, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "USA", null, "Programming", "David Thomas & Andrew Hunt", 1 }
+                    { new Guid("11111111-1111-1111-1111-111111111111"), "Software engineer and author, known for Clean Code", new DateTime(1952, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "USA", null, "Programming", "Robert C. Martin", 1 },
+                    { new Guid("22222222-2222-2222-2222-222222222222"), "Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides", new DateTime(1960, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Various", null, "Programming", "Gang of Four", 1 },
+                    { new Guid("33333333-3333-3333-3333-333333333333"), "Authors of The Pragmatic Programmer", new DateTime(1965, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "USA", null, "Programming", "David Thomas & Andrew Hunt", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -71,9 +69,9 @@ namespace Library.DataAccess.Migrations
                 columns: new[] { "Id", "AuthorId", "Genre", "ISBN", "Pages", "Title", "Year" },
                 values: new object[,]
                 {
-                    { 1, 1, "Programming", "978-0132350884", 464, "Clean Code", 2008 },
-                    { 2, 3, "Programming", "978-0135957059", 352, "The Pragmatic Programmer", 2019 },
-                    { 3, 2, "Programming", "978-0201633610", 395, "Design Patterns", 1994 }
+                    { new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), new Guid("11111111-1111-1111-1111-111111111111"), "Programming", "978-0132350884", 464, "Clean Code", 2008 },
+                    { new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), new Guid("33333333-3333-3333-3333-333333333333"), "Programming", "978-0135957059", 352, "The Pragmatic Programmer", 2019 },
+                    { new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), new Guid("22222222-2222-2222-2222-222222222222"), "Programming", "978-0201633610", 395, "Design Patterns", 1994 }
                 });
 
             migrationBuilder.CreateIndex(

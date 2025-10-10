@@ -1,8 +1,9 @@
+using FluentValidation;
 using Library.API.Endpoints;
-using Library.BusinessLayer.Services;
+using Library.BusinessLayer;
+using Library.BusinessLayer.Books.Commands;
 using Library.DataAccess.Data;
 using Library.DataAccess.Repositories;
-using Library.DataAccess.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,12 +28,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
-// Register Unit of Work
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+// Register FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<CreateBookCommand>();
 
-// Register Services
-builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddScoped<IAuthorService, AuthorService>();
+// Register MediatR
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblyContaining<CreateBookCommand>();
+    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    cfg.AddOpenBehavior(typeof(TransactionalBehavior<,>));
+});
 
 var app = builder.Build();
 

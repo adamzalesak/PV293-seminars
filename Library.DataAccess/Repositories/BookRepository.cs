@@ -10,7 +10,7 @@ public class BookRepository : Repository<Book>, IBookRepository
     {
     }
 
-    public async Task<IEnumerable<Book>> GetBooksByAuthorIdAsync(int authorId)
+    public async Task<IEnumerable<Book>> GetBooksByAuthorIdAsync(Guid authorId)
     {
         return await Entities
             .Where(b => b.AuthorId == authorId)

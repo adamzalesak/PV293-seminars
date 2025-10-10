@@ -4,7 +4,7 @@ namespace Library.DataAccess.Repositories;
 
 public interface IRepository<TEntity> where TEntity : class
 {
-    Task<TEntity?> GetByIdAsync(int id);
+    Task<TEntity?> GetByIdAsync(Guid id);
     Task<IEnumerable<TEntity>> GetAllAsync();
     Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
     Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);

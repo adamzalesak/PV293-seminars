@@ -3,12 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Library.DataAccess.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<Book> Books { get; set; }
     public DbSet<Author> Authors { get; set; }
 
@@ -41,11 +37,20 @@ public class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
+        // Define GUIDs for seed data
+        var authorId1 = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var authorId2 = Guid.Parse("22222222-2222-2222-2222-222222222222");
+        var authorId3 = Guid.Parse("33333333-3333-3333-3333-333333333333");
+
+        var bookId1 = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        var bookId2 = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+        var bookId3 = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc");
+
         // Seed data for Authors
         modelBuilder.Entity<Author>().HasData(
             new Author
             {
-                Id = 1,
+                Id = authorId1,
                 Name = "Robert C. Martin",
                 Biography = "Software engineer and author, known for Clean Code",
                 BirthDate = new DateTime(1952, 12, 5),
@@ -55,7 +60,7 @@ public class ApplicationDbContext : DbContext
             },
             new Author
             {
-                Id = 2,
+                Id = authorId2,
                 Name = "Gang of Four",
                 Biography = "Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides",
                 BirthDate = new DateTime(1960, 1, 1),
@@ -65,7 +70,7 @@ public class ApplicationDbContext : DbContext
             },
             new Author
             {
-                Id = 3,
+                Id = authorId3,
                 Name = "David Thomas & Andrew Hunt",
                 Biography = "Authors of The Pragmatic Programmer",
                 BirthDate = new DateTime(1965, 1, 1),
@@ -77,9 +82,9 @@ public class ApplicationDbContext : DbContext
 
         // Update seed data for Books with AuthorId
         modelBuilder.Entity<Book>().HasData(
-            new Book { Id = 1, Title = "Clean Code", AuthorId = 1, ISBN = "978-0132350884", Year = 2008, Pages = 464, Genre = "Programming" },
-            new Book { Id = 2, Title = "The Pragmatic Programmer", AuthorId = 3, ISBN = "978-0135957059", Year = 2019, Pages = 352, Genre = "Programming" },
-            new Book { Id = 3, Title = "Design Patterns", AuthorId = 2, ISBN = "978-0201633610", Year = 1994, Pages = 395, Genre = "Programming" }
+            new Book { Id = bookId1, Title = "Clean Code", AuthorId = authorId1, ISBN = "978-0132350884", Year = 2008, Pages = 464, Genre = "Programming" },
+            new Book { Id = bookId2, Title = "The Pragmatic Programmer", AuthorId = authorId3, ISBN = "978-0135957059", Year = 2019, Pages = 352, Genre = "Programming" },
+            new Book { Id = bookId3, Title = "Design Patterns", AuthorId = authorId2, ISBN = "978-0201633610", Year = 1994, Pages = 395, Genre = "Programming" }
         );
     }
 }

@@ -1,5 +1,6 @@
-using Library.BusinessLayer.Services;
-using Microsoft.AspNetCore.Mvc;
+using Library.BusinessLayer.Authors.Queries;
+using Library.BusinessLayer.Dtos;
+using MediatR;
 
 namespace Library.API.Endpoints;
 
@@ -12,12 +13,14 @@ public static class AuthorsEndpoints
         group.MapGet("/", GetAuthors)
             .WithName("GetAuthors")
             .WithSummary("Get all authors with their statistics")
+            .Produces<List<AuthorDto>>()
             .WithOpenApi();
     }
 
-    private static async Task<IResult> GetAuthors([FromServices] IAuthorService authorService)
+    private static async Task<IResult> GetAuthors(IMediator mediator)
     {
-        var authors = await authorService.GetAllAuthorsAsync();
+        var query = new GetAllAuthorsQuery();
+        var authors = await mediator.Send(query);
         return Results.Ok(authors);
     }
 }

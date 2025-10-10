@@ -22,9 +22,9 @@ namespace Library.DataAccess.Migrations
 
             modelBuilder.Entity("Library.DataAccess.Entities.Author", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Biography")
                         .IsRequired()
@@ -62,7 +62,7 @@ namespace Library.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             Biography = "Software engineer and author, known for Clean Code",
                             BirthDate = new DateTime(1952, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Country = "USA",
@@ -72,7 +72,7 @@ namespace Library.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
                             Biography = "Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides",
                             BirthDate = new DateTime(1960, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Country = "Various",
@@ -82,7 +82,7 @@ namespace Library.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
                             Biography = "Authors of The Pragmatic Programmer",
                             BirthDate = new DateTime(1965, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Country = "USA",
@@ -94,12 +94,12 @@ namespace Library.DataAccess.Migrations
 
             modelBuilder.Entity("Library.DataAccess.Entities.Book", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Genre")
                         .IsRequired()
@@ -131,8 +131,8 @@ namespace Library.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            AuthorId = 1,
+                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                            AuthorId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Genre = "Programming",
                             ISBN = "978-0132350884",
                             Pages = 464,
@@ -141,8 +141,8 @@ namespace Library.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = 2,
-                            AuthorId = 3,
+                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                            AuthorId = new Guid("33333333-3333-3333-3333-333333333333"),
                             Genre = "Programming",
                             ISBN = "978-0135957059",
                             Pages = 352,
@@ -151,8 +151,8 @@ namespace Library.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = 3,
-                            AuthorId = 2,
+                            Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+                            AuthorId = new Guid("22222222-2222-2222-2222-222222222222"),
                             Genre = "Programming",
                             ISBN = "978-0201633610",
                             Pages = 395,
