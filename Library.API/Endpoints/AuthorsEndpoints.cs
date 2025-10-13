@@ -14,7 +14,8 @@ public static class AuthorsEndpoints
             .WithName("GetAuthors")
             .WithSummary("Get all authors with their statistics")
             .Produces<List<AuthorDto>>()
-            .WithOpenApi();
+            .WithOpenApi()
+            .AllowAnonymous(); // Public access for viewing authors
     }
 
     private static async Task<IResult> GetAuthors(IMediator mediator)

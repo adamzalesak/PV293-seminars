@@ -1,12 +1,16 @@
 using Library.DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.DataAccess.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<Book> Books { get; set; }
     public DbSet<Author> Authors { get; set; }
+    public DbSet<Loan> Loans { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -35,6 +39,40 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .WithMany(a => a.Books)
                 .HasForeignKey(b => b.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Configure Loan entity
+        modelBuilder.Entity<Loan>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.BorrowerName).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.BorrowerEmail).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Status).HasConversion<string>();
+
+            // Configure Fines as owned entities
+            entity.OwnsMany(e => e.Fines, finesBuilder =>
+            {
+                finesBuilder.ToTable("Fines");
+                finesBuilder.WithOwner().HasForeignKey("LoanId");
+                finesBuilder.HasKey("Id");
+                finesBuilder.Property(f => f.Id).ValueGeneratedNever();
+                finesBuilder.Property(f => f.Type).HasConversion<string>();
+                finesBuilder.Property(f => f.Status).HasConversion<string>();
+                finesBuilder.Property(f => f.Reason).IsRequired().HasMaxLength(500);
+                finesBuilder.Property(f => f.PaymentReference).HasMaxLength(100);
+
+                // Configure Money value object within Fine
+                finesBuilder.OwnsOne(f => f.Amount, amountBuilder =>
+                {
+                    amountBuilder.Property(m => m.Amount).HasColumnName("Amount").HasPrecision(18, 2);
+                    amountBuilder.Property(m => m.Currency).HasColumnName("Currency").HasMaxLength(3);
+                });
+            });
+
+            // Index for querying active loans by book
+            entity.HasIndex(e => new { e.BookId, e.Status });
+            entity.HasIndex(e => e.BorrowerId);
+            entity.HasIndex(e => e.DueDate);
         });
 
         // Define GUIDs for seed data
@@ -80,11 +118,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             }
         );
 
-        // Update seed data for Books with AuthorId
+        // Seed data for Books - using anonymous types for DDD entities with private setters
         modelBuilder.Entity<Book>().HasData(
-            new Book { Id = bookId1, Title = "Clean Code", AuthorId = authorId1, ISBN = "978-0132350884", Year = 2008, Pages = 464, Genre = "Programming" },
-            new Book { Id = bookId2, Title = "The Pragmatic Programmer", AuthorId = authorId3, ISBN = "978-0135957059", Year = 2019, Pages = 352, Genre = "Programming" },
-            new Book { Id = bookId3, Title = "Design Patterns", AuthorId = authorId2, ISBN = "978-0201633610", Year = 1994, Pages = 395, Genre = "Programming" }
+            new { Id = bookId1, Title = "Clean Code", AuthorId = authorId1, ISBN = "978-0132350884", Year = 2008, Pages = 464, Genre = "Programming", CreatedAt = DateTime.UtcNow },
+            new { Id = bookId2, Title = "The Pragmatic Programmer", AuthorId = authorId3, ISBN = "978-0135957059", Year = 2019, Pages = 352, Genre = "Programming", CreatedAt = DateTime.UtcNow },
+            new { Id = bookId3, Title = "Design Patterns", AuthorId = authorId2, ISBN = "978-0201633610", Year = 1994, Pages = 395, Genre = "Programming", CreatedAt = DateTime.UtcNow }
         );
     }
 }

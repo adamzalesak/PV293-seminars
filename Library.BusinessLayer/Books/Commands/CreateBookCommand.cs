@@ -23,16 +23,14 @@ public class CreateBookCommandHandler(
 {
     public async Task<Guid> Handle(CreateBookCommand command, CancellationToken cancellationToken)
     {
-        var book = new Book
-        {
-            Id = Guid.NewGuid(),
-            Title = command.Title,
-            AuthorId = command.AuthorId,
-            ISBN = command.ISBN,
-            Year = command.Year,
-            Pages = command.Pages,
-            Genre = command.Genre,
-        };
+        var book = Book.Create(
+            command.Title,
+            command.ISBN,
+            command.Year,
+            command.Pages,
+            command.Genre,
+            command.AuthorId
+        );
 
         bookRepository.Add(book);
 

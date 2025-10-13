@@ -3,6 +3,7 @@ using System;
 using Library.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251011162920_User-Management")]
+    partial class UserManagement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -190,6 +193,9 @@ namespace Library.DataAccess.Migrations
                     b.Property<int>("Pages")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal?>("Rating")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -209,10 +215,11 @@ namespace Library.DataAccess.Migrations
                         {
                             Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                             AuthorId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            CreatedAt = new DateTime(2025, 10, 12, 17, 39, 53, 736, DateTimeKind.Utc).AddTicks(4190),
+                            CreatedAt = new DateTime(2025, 10, 11, 16, 29, 20, 448, DateTimeKind.Utc).AddTicks(8010),
                             Genre = "Programming",
                             ISBN = "978-0132350884",
                             Pages = 464,
+                            Rating = 4.5m,
                             Title = "Clean Code",
                             Year = 2008
                         },
@@ -220,10 +227,11 @@ namespace Library.DataAccess.Migrations
                         {
                             Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
                             AuthorId = new Guid("33333333-3333-3333-3333-333333333333"),
-                            CreatedAt = new DateTime(2025, 10, 12, 17, 39, 53, 736, DateTimeKind.Utc).AddTicks(4500),
+                            CreatedAt = new DateTime(2025, 10, 11, 16, 29, 20, 448, DateTimeKind.Utc).AddTicks(8460),
                             Genre = "Programming",
                             ISBN = "978-0135957059",
                             Pages = 352,
+                            Rating = 4.7m,
                             Title = "The Pragmatic Programmer",
                             Year = 2019
                         },
@@ -231,10 +239,11 @@ namespace Library.DataAccess.Migrations
                         {
                             Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
                             AuthorId = new Guid("22222222-2222-2222-2222-222222222222"),
-                            CreatedAt = new DateTime(2025, 10, 12, 17, 39, 53, 736, DateTimeKind.Utc).AddTicks(4500),
+                            CreatedAt = new DateTime(2025, 10, 11, 16, 29, 20, 448, DateTimeKind.Utc).AddTicks(8460),
                             Genre = "Programming",
                             ISBN = "978-0201633610",
                             Pages = 395,
+                            Rating = 4.3m,
                             Title = "Design Patterns",
                             Year = 1994
                         });
