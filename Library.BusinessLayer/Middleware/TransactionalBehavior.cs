@@ -1,5 +1,5 @@
-using Library.BusinessLayer.CQRS;
-using Library.DataAccess.Data;
+using Library.Application.CQRS;
+using Library.Infrastructure.Data;
 using MediatR;
 
 namespace Library.BusinessLayer.Middleware;

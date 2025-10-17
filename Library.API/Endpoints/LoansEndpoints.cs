@@ -1,6 +1,6 @@
-using Library.BusinessLayer.Loans.Commands;
-using Library.DataAccess.Constants;
-using Library.DataAccess.ValueObjects;
+using Library.Application.Loans.Commands;
+using Library.Domain.ValueObjects;
+using Library.Domain.Constants;
 using MediatR;
 using System.Security.Claims;
 
