@@ -123,7 +123,24 @@ public class Loan
     /// </summary>
     public void ExtendDueDate(int additionalDays)
     {
-        throw new NotImplementedException();
+        if (Status != LoanStatus.Active)
+            throw new InvalidOperationException($"Cannot extend a loan with status: {Status}. Only active loans can be extended.");
+
+        if (additionalDays <= 0)
+            throw new ArgumentException("Additional days must be positive", nameof(additionalDays));
+
+        if (IsOverdue())
+            throw new InvalidOperationException("Cannot extend an overdue loan.");
+
+        // Calculate total loan duration after extension
+        var currentDuration = (DueDate - LoanDate).Days;
+        var newTotalDuration = currentDuration + additionalDays;
+
+        if (newTotalDuration > 90)
+            throw new InvalidOperationException("Total loan duration cannot exceed 90 days.");
+
+        // Update due date
+        DueDate = DueDate.AddDays(additionalDays);
     }
 
 
@@ -150,7 +167,20 @@ public class Loan
     /// </summary>
     public void ReportDamage(string damageDescription, Money damageCost)
     {
-        throw new NotImplementedException();
+        if (Status == LoanStatus.Lost || Status == LoanStatus.Completed)
+            throw new InvalidOperationException($"Cannot report damage on a loan with status: {Status}");
+
+        if (string.IsNullOrWhiteSpace(damageDescription))
+            throw new ArgumentException("Damage description cannot be empty", nameof(damageDescription));
+
+        if (damageCost == null)
+            throw new ArgumentNullException(nameof(damageCost), "Damage cost cannot be null");
+
+        if (damageCost.Amount <= 0)
+            throw new ArgumentException("Damage cost must be positive", nameof(damageCost));
+
+        // Add fine with damage description in the reason
+        AddFine(FineType.DamageFee, damageCost, $"Book damage fee: {damageDescription.Trim()}");
     }
 
 

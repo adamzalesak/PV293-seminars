@@ -170,10 +170,12 @@ namespace Library.Tests.Domain
         [Fact]
         public void ExtendDueDate_TotalDurationCannotExceed90Days()
         {
-            // Start with 60 days, try to add 31 => 91 total -> should fail
-            var loan = Loan.Create(Guid.NewGuid(), Guid.NewGuid(), "Dan", "dan@example.com", 60);
+            // NOTE: This test in the original format will always fail since the loan duration cannot exceed 30 days
 
-            Assert.Throws<InvalidOperationException>(() => loan.ExtendDueDate(31));
+            // Start with 60 days, try to add 31 => 91 total -> should fail
+            var loan = Loan.Create(Guid.NewGuid(), Guid.NewGuid(), "Dan", "dan@example.com", 30);
+
+            Assert.Throws<InvalidOperationException>(() => loan.ExtendDueDate(61));
         }
 
         [Fact]
