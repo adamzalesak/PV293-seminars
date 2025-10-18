@@ -83,7 +83,7 @@ public static class LoansEndpoints
         {
             LoanId = loanId,
             DamageDescription = request.DamageDescription,
-            DamageCost = request.DamageCost
+            DamageCost = Money.Create(request.DamageCost, request.DemageCostCurrency),
         };
 
         await mediator.Send(command);
@@ -105,6 +105,7 @@ public record ExtendLoanDueDateRequest
 
 public record ReportDamageRequest
 {
-    public string DamageDescription { get; init; } = string.Empty;
-    public Money DamageCost { get; init; } = null!;
+    public required string DamageDescription { get; init; }
+    public decimal DamageCost { get; init; }
+    public required string DemageCostCurrency { get; init; }
 }
