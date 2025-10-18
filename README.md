@@ -68,3 +68,56 @@ admin@library.com / Admin@123
 librarian@library.com / Librarian@123
 member@library.com / Member@123
 ```
+
+## Task 2: Value Objects - Reducing Primitive Obsession
+
+### What are Value Objects?
+
+Value Objects are immutable objects defined by their attributes rather than their identity. Unlike entities which have a unique ID, two value objects with the same attributes are considered equal.
+
+### Example: Money Value Object
+
+The codebase already has a good example: [Money](Library.Domain/ValueObjects/Money.cs)
+
+```csharp
+// Instead of primitive types:
+decimal amount;
+string currency;
+
+// We use a Value Object:
+Money amount = Money.Create(10.50m, "EUR");
+```
+
+**Benefits:**
+- Encapsulates validation logic (no negative amounts, valid currency codes)
+- Type safety (can't accidentally swap amount and currency)
+- Immutable - operations return new instances
+- Rich behavior (Add, Subtract operations with currency matching)
+
+### Your Task
+
+1. **Analyze the Loan aggregate** - Look at [Loan.cs](Library.Domain/Aggregates/Loan/Loan.cs) and identify properties that could be extracted into Value Objects. Think about:
+   - Which primitive types (string, DateTime, etc.) represent domain concepts?
+   - What validation rules could be encapsulated?
+   - What behavior could be moved from the aggregate to a Value Object?
+
+2. **Consider these examples** (or find your own):
+   - **PhoneNumber** - For borrower contact information (validation, formatting)
+   - **LoanPeriod** - For managing loan dates (StartDate, DueDate, ReturnDate with overdue calculations)
+   - Or identify other primitives in Loan or other aggregates that would benefit from Value Object extraction
+
+3. **Implement Value Objects**:
+   - Create at least 2 Value Objects in `Library.Domain` project
+   - Make them immutable
+   - Add validation in factory methods (Create method)
+   - Implement equality based on values (maybe you don't have to 😉)
+
+4. **Refactor the aggregate** to use your new Value Objects instead of primitives
+
+5. **Configure EF Core mapping** in the entity configuration files (`Library.Infrastructure/Data/EntityConfigurations/`) to map Value Objects to database columns or tables (owned entity types, value conversions, etc.)
+
+## Task 3: Domain Events - Cross-Aggregate Communication
+
+The application has a bug - the Book aggregate contains an `IsAvailable` property, but it always remains `true` even when books are loaned out. You should update this property based on the state of the Loan related to this particular Book.
+
+Your task is to fix this bug. Keep in mind that Book and Loan are separate aggregates, so you should not modify both in the same command handler. Use the appropriate DDD tactical pattern to handle cross-aggregate communication 😉
