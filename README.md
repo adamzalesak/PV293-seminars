@@ -1,4 +1,4 @@
-# Seminar 3: Aggregates and Domain Events in Clean Architecture
+# Seminar 3: Clean Architecture with Value Objects and Domain Events
 
 ## Task 1: Explore the Codebase
 
