@@ -1,8 +1,8 @@
 using Library.Domain.Common;
 
-namespace Library.Domain.Entities;
+namespace Library.Domain.Aggregates;
 
-public class Author : Entity
+public class Author : AggregateRoot
 {
     public string Name { get; set; } = string.Empty;
     public string Biography { get; set; } = string.Empty;

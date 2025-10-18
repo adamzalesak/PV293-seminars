@@ -1,4 +1,4 @@
-﻿using Library.Domain.Entities;
+﻿using Library.Domain.Aggregates;
 
 namespace Library.Application.Repositories;
 

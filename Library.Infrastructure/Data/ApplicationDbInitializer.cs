@@ -1,4 +1,4 @@
-using Library.Domain.Entities;
+using Library.Domain.Aggregates;
 using Library.Domain.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

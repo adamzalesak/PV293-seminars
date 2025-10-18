@@ -1,5 +1,4 @@
-using Library.Domain.Entities;
-using Library.Domain.Entities.Loan;
+using Library.Domain.Aggregates.Loan;
 
 namespace Library.Application.Repositories;
 

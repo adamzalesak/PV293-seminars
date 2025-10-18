@@ -1,6 +1,6 @@
+using Library.Domain.Aggregates;
+using Library.Domain.Aggregates.Loan;
 using Library.Domain.Common;
-using Library.Domain.Entities;
-using Library.Domain.Entities.Loan;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

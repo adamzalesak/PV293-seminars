@@ -1,6 +1,6 @@
 using Library.Domain.Common;
 
-namespace Library.Domain.Entities;
+namespace Library.Domain.Aggregates;
 
 public class Book : AggregateRoot
 {

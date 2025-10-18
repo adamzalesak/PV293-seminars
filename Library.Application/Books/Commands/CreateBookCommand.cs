@@ -1,6 +1,6 @@
 using Library.Application.Books.Events;
-using Library.Domain.Entities;
 using Library.Application.Repositories;
+using Library.Domain.Aggregates;
 using Library.Domain.Common.CQRS;
 using MediatR;
 

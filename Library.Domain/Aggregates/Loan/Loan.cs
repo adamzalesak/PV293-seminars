@@ -3,7 +3,7 @@ using Library.Domain.Common;
 using Library.Domain.Constants;
 using Library.Domain.ValueObjects;
 
-namespace Library.Domain.Entities.Loan;
+namespace Library.Domain.Aggregates.Loan;
 
 public class Loan : AggregateRoot
 {

@@ -1,8 +1,8 @@
 using System.Security.Claims;
-using Library.Domain.Entities;
 using Library.Application.Repositories;
+using Library.Domain.Aggregates;
+using Library.Domain.Aggregates.Loan;
 using Library.Domain.Common.CQRS;
-using Library.Domain.Entities.Loan;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

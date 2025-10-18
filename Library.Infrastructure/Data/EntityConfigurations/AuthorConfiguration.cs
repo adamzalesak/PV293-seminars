@@ -1,4 +1,4 @@
-using Library.Domain.Entities;
+using Library.Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

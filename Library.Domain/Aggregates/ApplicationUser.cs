@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Library.Domain.Entities;
+namespace Library.Domain.Aggregates;
 
 public class ApplicationUser : IdentityUser<Guid>
 {

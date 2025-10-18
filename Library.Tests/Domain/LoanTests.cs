@@ -1,9 +1,8 @@
 ﻿using Library.Domain.Constants;
-using Library.Domain.Entities;
 using Library.Domain.ValueObjects;
 using System.Reflection;
 using System.Security.Claims;
-using Library.Domain.Entities.Loan;
+using Library.Domain.Aggregates.Loan;
 
 
 namespace Library.Tests.Domain
