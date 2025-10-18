@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Library.Application.CQRS;
+using Library.Domain.Common.CQRS;
 using Library.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

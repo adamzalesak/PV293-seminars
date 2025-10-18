@@ -1,6 +1,6 @@
-using Library.Application.CQRS;
 using Library.Application.Dtos;
 using Library.Application.Repositories;
+using Library.Domain.Common.CQRS;
 
 namespace Library.Application.Books.Queries;
 

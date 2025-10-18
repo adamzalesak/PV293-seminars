@@ -1,8 +1,9 @@
+using Library.Domain.Common;
+
 namespace Library.Domain.Entities;
 
-public class Author
+public class Author : Entity
 {
-    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Biography { get; set; } = string.Empty;
     public DateTime BirthDate { get; set; }
@@ -15,4 +16,10 @@ public class Author
     public int TotalBooksPublished { get; set; }
     public DateTime? LastPublishedDate { get; set; }
     public string MostPopularGenre { get; set; } = string.Empty;
+
+    // Constructor for EF Core
+    public Author() : base() { }
+
+    // Constructor with ID for seeding
+    public Author(Guid id) : base(id) { }
 }

@@ -1,11 +1,11 @@
 using MediatR;
 
-namespace Library.Application.CQRS;
+namespace Library.Domain.Common.CQRS;
 
 public interface ICommand : IRequest;
 
-public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand, ICommand>
-    where TCommand : ICommand<ICommand>;
+public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand>
+    where TCommand : ICommand;
 
 public interface ICommand<out TResponse> : IRequest<TResponse>;
 

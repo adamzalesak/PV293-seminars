@@ -1,5 +1,5 @@
-using Library.Application.CQRS;
 using Library.Application.Repositories;
+using Library.Domain.Common.CQRS;
 
 namespace Library.Application.Books.Events;
 

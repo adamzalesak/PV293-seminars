@@ -1,16 +1,59 @@
+using Library.Domain.Common;
 using Library.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.Infrastructure.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
+    private readonly IMediator? _mediator;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
+    {
+    }
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IMediator mediator)
+        : base(options)
+    {
+        _mediator = mediator;
+    }
+
     public DbSet<Book> Books { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<Loan> Loans { get; set; }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        if (_mediator != null)
+        {
+            await PublishDomainEvents(cancellationToken);
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task PublishDomainEvents(CancellationToken cancellationToken)
+    {
+        var aggregates = ChangeTracker.Entries<AggregateRoot>()
+            .Select(e => e.Entity)
+            .Where(e => e.DomainEvents.Any())
+            .ToList();
+
+        var domainEvents = aggregates
+            .SelectMany(e => e.DomainEvents)
+            .ToList();
+
+        aggregates.ForEach(e => e.ClearDomainEvents());
+
+        foreach (var domainEvent in domainEvents)
+        {
+            await _mediator!.Publish(domainEvent, cancellationToken);
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -86,9 +129,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         // Seed data for Authors
         modelBuilder.Entity<Author>().HasData(
-            new Author
-        {
-                Id = authorId1,
+            new Author(authorId1)
+            {
                 Name = "Robert C. Martin",
                 Biography = "Software engineer and author, known for Clean Code",
                 BirthDate = new DateTime(1952, 12, 5),
@@ -96,9 +138,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 TotalBooksPublished = 1,
                 MostPopularGenre = "Programming"
             },
-            new Author
+            new Author(authorId2)
             {
-                Id = authorId2,
                 Name = "Gang of Four",
                 Biography = "Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides",
                 BirthDate = new DateTime(1960, 1, 1),
@@ -106,9 +147,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 TotalBooksPublished = 1,
                 MostPopularGenre = "Programming"
             },
-            new Author
+            new Author(authorId3)
             {
-                Id = authorId3,
                 Name = "David Thomas & Andrew Hunt",
                 Biography = "Authors of The Pragmatic Programmer",
                 BirthDate = new DateTime(1965, 1, 1),

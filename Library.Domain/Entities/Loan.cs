@@ -1,12 +1,12 @@
+using Library.Domain.Common;
 using Library.Domain.Constants;
 using Library.Domain.ValueObjects;
 using System.Security.Claims;
 
 namespace Library.Domain.Entities;
 
-public class Loan
+public class Loan : AggregateRoot
 {
-    public Guid Id { get; private set; }
     public Guid BookId { get; private set; }
     public Guid BorrowerId { get; private set; }
     public string BorrowerName { get; private set; } = string.Empty;
@@ -21,7 +21,12 @@ public class Loan
     public IReadOnlyCollection<Fine> Fines => _fines.AsReadOnly();
 
     // Private constructor for EF Core
-    private Loan()
+    private Loan() : base()
+    {
+    }
+
+    // Constructor with ID for seeding
+    private Loan(Guid id) : base(id)
     {
     }
 
@@ -77,9 +82,8 @@ public class Loan
         if (loanDurationDays > 30)
             throw new ArgumentException("Loan duration cannot exceed 30 days", nameof(loanDurationDays));
 
-        return new Loan
+        var loan = new Loan
         {
-            Id = Guid.NewGuid(),
             BookId = bookId,
             BorrowerId = borrowerId,
             BorrowerName = borrowerName,
@@ -88,6 +92,8 @@ public class Loan
             DueDate = DateTime.UtcNow.AddDays(loanDurationDays),
             Status = LoanStatus.Active
         };
+
+        return loan;
     }
 
     public void Return()

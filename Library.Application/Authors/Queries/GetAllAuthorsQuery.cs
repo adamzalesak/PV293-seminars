@@ -1,6 +1,6 @@
-using Library.Application.CQRS;
 using Library.Application.Dtos;
 using Library.Application.Repositories;
+using Library.Domain.Common.CQRS;
 using MediatR;
 
 namespace Library.Application.Authors.Queries;

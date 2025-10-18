@@ -1,4 +1,4 @@
-using Library.Application.CQRS;
+using Library.Domain.Common.CQRS;
 using Library.Domain.Constants;
 using Library.Domain.Entities;
 using MediatR;

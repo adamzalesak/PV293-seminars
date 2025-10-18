@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Library.Application.CQRS;
+namespace Library.Domain.Common.CQRS;
 
 public interface IQuery<out TResponse> : IRequest<TResponse>;
 

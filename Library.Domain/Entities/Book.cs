@@ -1,8 +1,9 @@
+using Library.Domain.Common;
+
 namespace Library.Domain.Entities;
 
-public class Book
+public class Book : AggregateRoot
 {
-    public Guid Id { get; private set; }
     public string Title { get; private set; } = string.Empty;
     public string ISBN { get; private set; } = string.Empty;
     public int Year { get; private set; }
@@ -16,7 +17,10 @@ public class Book
     public Author Author { get; set; } = null!;
 
     // Private constructor for EF Core
-    private Book() { }
+    private Book() : base() { }
+
+    // Constructor with ID for seeding
+    private Book(Guid id) : base(id) { }
 
     // Factory method for creating a new book
     public static Book Create(string title, string isbn, int year, int pages, string genre, Guid authorId)
@@ -27,9 +31,8 @@ public class Book
         if (authorId == Guid.Empty)
             throw new ArgumentException("Author ID cannot be empty", nameof(authorId));
 
-        return new Book
+        var book = new Book
         {
-            Id = Guid.NewGuid(),
             Title = title,
             ISBN = isbn,
             Year = year,
@@ -38,6 +41,8 @@ public class Book
             AuthorId = authorId,
             CreatedAt = DateTime.UtcNow
         };
+
+        return book;
     }
 
     public void UpdateDetails(string title, int year, int pages, string genre)

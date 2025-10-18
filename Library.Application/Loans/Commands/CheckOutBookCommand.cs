@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using Library.Application.CQRS;
 using Library.Domain.Entities;
 using Library.Application.Repositories;
+using Library.Domain.Common.CQRS;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

@@ -1,10 +1,10 @@
+using Library.Domain.Common;
 using Library.Domain.ValueObjects;
 
 namespace Library.Domain.Entities;
 
-public class Fine
+public class Fine : Entity
 {
-    public Guid Id { get; private set; }
     public FineType Type { get; private set; }
     public Money Amount { get; private set; }
     public string Reason { get; private set; } = string.Empty;
@@ -18,13 +18,13 @@ public class Fine
     public int GetDaysOverdue() => Status == FineStatus.Pending ? (DateTime.UtcNow - IssuedDate).Days : 0;
 
     // Private constructor for EF Core
-    private Fine()
+    private Fine() : base()
     {
         Amount = Money.Create(0, "EUR"); // EF Core needs this
     }
 
     // Internal constructor - only Loan aggregate can create fines
-    internal Fine(FineType type, Money amount, string reason)
+    internal Fine(FineType type, Money amount, string reason) : base()
     {
         if (amount == null)
             throw new ArgumentNullException(nameof(amount));
@@ -32,7 +32,6 @@ public class Fine
         if (string.IsNullOrWhiteSpace(reason))
             throw new ArgumentException("Reason cannot be empty", nameof(reason));
 
-        Id = Guid.NewGuid();
         Type = type;
         Amount = amount;
         Reason = reason;
