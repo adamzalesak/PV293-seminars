@@ -116,7 +116,7 @@ Money amount = Money.Create(10.50m, "EUR");
 
 5. **Configure EF Core mapping** in the entity configuration files (`Library.Infrastructure/Data/EntityConfigurations/`) to map Value Objects to database columns or tables (owned entity types, value conversions, etc.)
 
-## Task 3: Domain Events - Cross-Aggregate Communication
+## Task 3: Cross-Aggregate Communication
 
 The application has a bug - the Book aggregate contains an `IsAvailable` property, but it always remains `true` even when books are loaned out. You should update this property based on the state of the Loan related to this particular Book.
 
