@@ -1,7 +1,7 @@
 using Library.Domain.Common;
 using Library.Domain.ValueObjects;
 
-namespace Library.Domain.Entities;
+namespace Library.Domain.Entities.Loan;
 
 public class Fine : Entity
 {

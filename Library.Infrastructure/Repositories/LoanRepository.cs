@@ -1,5 +1,6 @@
 using Library.Domain.Entities;
 using Library.Application.Repositories;
+using Library.Domain.Entities.Loan;
 using Library.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

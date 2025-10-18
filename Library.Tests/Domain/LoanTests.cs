@@ -3,6 +3,7 @@ using Library.Domain.Entities;
 using Library.Domain.ValueObjects;
 using System.Reflection;
 using System.Security.Claims;
+using Library.Domain.Entities.Loan;
 
 
 namespace Library.Tests.Domain

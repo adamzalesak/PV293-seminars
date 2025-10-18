@@ -1,9 +1,9 @@
+using System.Security.Claims;
 using Library.Domain.Common;
 using Library.Domain.Constants;
 using Library.Domain.ValueObjects;
-using System.Security.Claims;
 
-namespace Library.Domain.Entities;
+namespace Library.Domain.Entities.Loan;
 
 public class Loan : AggregateRoot
 {
@@ -21,7 +21,7 @@ public class Loan : AggregateRoot
     public IReadOnlyCollection<Fine> Fines => _fines.AsReadOnly();
 
     // Private constructor for EF Core
-    private Loan() : base()
+    private Loan()
     {
     }
 
@@ -118,15 +118,6 @@ public class Loan : AggregateRoot
         }
     }
 
-    /// <summary>
-    /// TODO 1: Implement loan extension logic
-    /// Requirements:
-    /// - Can only extend active loans
-    /// - Additional days must be positive
-    /// - Cannot extend overdue loans
-    /// - Total loan duration cannot exceed 90 days
-    /// - Should update the DueDate appropriately
-    /// </summary>
     public void ExtendDueDate(int additionalDays)
     {
         if (Status != LoanStatus.Active)
@@ -162,15 +153,6 @@ public class Loan : AggregateRoot
         AddFine(FineType.LostBookFee, replacementFee, "Book replacement fee");
     }
 
-    /// <summary>
-    /// TODO 2: Implement damage reporting logic
-    /// Requirements:
-    /// - Not allowed when loan is Lost or Completed.
-    /// - damageDescription must be non-empty.
-    /// - damageCost must be a positive Money value - do you have to validate it here?
-    /// - Should add a Fine of type DamageFee with reason including the description.
-    /// - Do NOT auto-complete the loan here; completion is handled after fines are settled.
-    /// </summary>
     public void ReportDamage(string damageDescription, Money damageCost)
     {
         if (Status == LoanStatus.Lost || Status == LoanStatus.Completed)
