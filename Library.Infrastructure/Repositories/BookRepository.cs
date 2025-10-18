@@ -11,6 +11,13 @@ public class BookRepository : Repository<Book>, IBookRepository
     {
     }
 
+    public async Task<IEnumerable<Book>> GetAllBooksWithAuthorsAsync(CancellationToken cancellationToken)
+    {
+        return await Entities
+            .Include(b => b.Author)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<Book>> GetBooksByAuthorIdAsync(Guid authorId)
     {
         return await Entities

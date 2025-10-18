@@ -12,7 +12,7 @@ public class GetAllBooksQueryHandler(
 {
     public async Task<List<BookDto>> Handle(GetAllBooksQuery query, CancellationToken cancellationToken)
     {
-        var books = await bookRepository.GetAllAsync(cancellationToken);
+        var books = await bookRepository.GetAllBooksWithAuthorsAsync(cancellationToken);
 
         return books.Select(b => new BookDto
         {

@@ -109,6 +109,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Register FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<CreateBookCommand>();
