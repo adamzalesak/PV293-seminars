@@ -40,6 +40,14 @@ public static class LoansEndpoints
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization(policy => policy
                 .RequireRole(UserRoles.Member, UserRoles.Librarian, UserRoles.Admin));
+
+        loans.MapPost("/{loanId}/return", ReturnBook)
+            .WithName("ReturnBook")
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .RequireAuthorization(policy => policy
+                .RequireRole(UserRoles.Member, UserRoles.Librarian, UserRoles.Admin));
     }
 
     private static async Task<IResult> CheckOutBook(
@@ -84,6 +92,19 @@ public static class LoansEndpoints
             LoanId = loanId,
             DamageDescription = request.DamageDescription,
             DamageCost = Money.Create(request.DamageCost, request.DemageCostCurrency),
+        };
+
+        await mediator.Send(command);
+        return Results.NoContent();
+    }
+
+    private static async Task<IResult> ReturnBook(
+        Guid loanId,
+        IMediator mediator)
+    {
+        var command = new ReturnBookCommand
+        {
+            LoanId = loanId
         };
 
         await mediator.Send(command);

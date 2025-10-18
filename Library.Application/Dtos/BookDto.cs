@@ -12,4 +12,5 @@ public class BookDto
     // Author information
     public Guid AuthorId { get; set; }
     public string AuthorName { get; set; } = string.Empty;
+    public bool IsAvailable { get; set; }
 }

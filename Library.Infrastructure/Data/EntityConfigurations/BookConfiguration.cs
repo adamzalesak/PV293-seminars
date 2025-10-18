@@ -20,6 +20,10 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.Property(e => e.Genre)
             .HasMaxLength(50);
 
+        builder.Property(e => e.IsAvailable)
+            .IsRequired()
+            .HasDefaultValue(true);
+
         // Configure relationship with Author
         builder.HasOne(b => b.Author)
             .WithMany(a => a.Books)
@@ -40,6 +44,8 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         var bookId3 = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc");
 
         // Using anonymous types for seeding entities with private setters
+        var seedDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
         builder.HasData(
             new
             {
@@ -50,7 +56,8 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
                 Year = 2008,
                 Pages = 464,
                 Genre = "Programming",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = seedDate,
+                IsAvailable = true
             },
             new
             {
@@ -61,7 +68,8 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
                 Year = 2019,
                 Pages = 352,
                 Genre = "Programming",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = seedDate,
+                IsAvailable = true
             },
             new
             {
@@ -72,7 +80,8 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
                 Year = 1994,
                 Pages = 395,
                 Genre = "Programming",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = seedDate,
+                IsAvailable = true
             }
         );
     }

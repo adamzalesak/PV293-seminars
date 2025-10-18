@@ -5,27 +5,22 @@ using MediatR;
 
 namespace Library.Application.Loans.Commands;
 
-public class ReportDamageCommand : ICommand<Guid>
+public record ReportDamageCommand : ICommand
 {
-    public Guid LoanId { get; set; }
-    public string DamageDescription { get; set; } = string.Empty;
-    public Money DamageCost { get; set; } = null!;
+    public Guid LoanId { get; init; }
+    public required string DamageDescription { get; init; }
+    public required Money DamageCost { get; init; }
 }
 
 public class ReportDamageCommandHandler(
     ILoanRepository loanRepository
-    ) : IRequestHandler<ReportDamageCommand, Guid>
+    ) : IRequestHandler<ReportDamageCommand>
 {
-    public async Task<Guid> Handle(ReportDamageCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ReportDamageCommand request, CancellationToken cancellationToken)
     {
-        var loan = await loanRepository.GetByIdAsync(request.LoanId);
-        if (loan == null)
-        {
+        var loan = await loanRepository.GetByIdAsync(request.LoanId) ??
             throw new InvalidOperationException($"Loan with ID {request.LoanId} not found");
-        }
 
         loan.ReportDamage(request.DamageDescription, request.DamageCost);
-
-        return loan.Id;
     }
 }

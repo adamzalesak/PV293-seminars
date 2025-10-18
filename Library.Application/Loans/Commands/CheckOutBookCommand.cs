@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Library.Application.Loans.Commands;
 
-public class CheckOutBookCommand : ICommand<Guid>
+public record CheckOutBookCommand : ICommand<Guid>
 {
-    public Guid BookId { get; set; }
-    public Guid? BorrowerId { get; set; } // Optional - if not provided, use current user
-    public int LoanDurationDays { get; set; } = 14;
-    public ClaimsPrincipal? User { get; set; } // User context for authorization
+    public Guid BookId { get; init; }
+    public Guid? BorrowerId { get; init; } // Optional - if not provided, use current user
+    public int LoanDurationDays { get; init; } = 14;
+    public ClaimsPrincipal? User { get; init; } // User context for authorization
 }
 
 public class CheckOutBookCommandHandler(

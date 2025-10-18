@@ -10,6 +10,7 @@ public class Book : AggregateRoot
     public int Pages { get; private set; }
     public string Genre { get; private set; } = string.Empty;
     public DateTime CreatedAt { get; private set; }
+    public bool IsAvailable { get; private set; }
 
     // Foreign key
     public Guid AuthorId { get; private set; }
@@ -39,7 +40,8 @@ public class Book : AggregateRoot
             Pages = pages,
             Genre = genre,
             AuthorId = authorId,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            IsAvailable = true // New books are available by default
         };
 
         return book;
@@ -54,6 +56,17 @@ public class Book : AggregateRoot
         Year = year;
         Pages = pages;
         Genre = genre;
+    }
+
+    // TODO: these methods should be called whenever the book is on loan
+    public void MarkAsAvailable()
+    {
+        IsAvailable = true;
+    }
+
+    public void UnmarkAsLoaned()
+    {
+        IsAvailable = false;
     }
 
     public bool IsClassic() => Year < 1950;

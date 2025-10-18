@@ -4,26 +4,21 @@ using MediatR;
 
 namespace Library.Application.Loans.Commands;
 
-public class ExtendLoanDueDateCommand : ICommand<Guid>
+public record ExtendLoanDueDateCommand : ICommand
 {
-    public Guid LoanId { get; set; }
-    public int AdditionalDays { get; set; }
+    public Guid LoanId { get; init; }
+    public int AdditionalDays { get; init; }
 }
 
 public class ExtendLoanDueDateCommandHandler(
     ILoanRepository loanRepository
-    ) : IRequestHandler<ExtendLoanDueDateCommand, Guid>
+    ) : IRequestHandler<ExtendLoanDueDateCommand>
 {
-    public async Task<Guid> Handle(ExtendLoanDueDateCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ExtendLoanDueDateCommand request, CancellationToken cancellationToken)
     {
-        var loan = await loanRepository.GetByIdAsync(request.LoanId);
-        if (loan == null)
-        {
+        var loan = await loanRepository.GetByIdAsync(request.LoanId) ??
             throw new InvalidOperationException($"Loan with ID {request.LoanId} not found");
-        }
 
         loan.ExtendDueDate(request.AdditionalDays);
-
-        return loan.Id;
     }
 }

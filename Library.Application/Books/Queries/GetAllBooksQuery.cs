@@ -23,7 +23,8 @@ public class GetAllBooksQueryHandler(
             Pages = b.Pages,
             Genre = b.Genre,
             AuthorId = b.AuthorId,
-            AuthorName = b.Author.Name
+            AuthorName = b.Author.Name,
+            IsAvailable = b.IsAvailable,
         }).ToList();
     }
 }
