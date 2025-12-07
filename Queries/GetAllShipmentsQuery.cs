@@ -1,0 +1,16 @@
+namespace FreightShipping.Queries;
+
+public record GetAllShipmentsQuery;
+
+public record GetAllShipmentsResponse(List<ShipmentDto> Shipments);
+
+public record ShipmentDto(
+    Guid Id,
+    string Origin,
+    string Destination,
+    ShipmentStatus Status,
+    DateTime ScheduledAt,
+    DateTime? PickedUpAt,
+    DateTime? DeliveredAt,
+    DateTime? CancelledAt
+);
