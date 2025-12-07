@@ -1,8 +1,8 @@
+using FreightShippingTutorial.Models;
 using Marten;
 using Wolverine.Http;
-using FreightShippingTutorial.Models;
 
-namespace FreightShipping.Features;
+namespace FreightShipping.DocumentDatabase.Features;
 
 public record CreateShipmentCommand(string Origin, string Destination);
 
