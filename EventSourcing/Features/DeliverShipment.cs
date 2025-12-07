@@ -24,8 +24,6 @@ public static class DeliverShipmentHandler
         // Append the event to the existing stream
         session.Events.Append(shipmentId, @event);
 
-        await session.SaveChangesAsync();
-
         return new DeliverShipmentResponse(shipmentId, "Delivered", deliveredAt);
     }
 }

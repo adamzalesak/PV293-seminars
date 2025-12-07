@@ -22,8 +22,6 @@ public static class PickUpShipmentHandler
         // Append the event to the existing stream
         session.Events.Append(shipmentId, @event);
 
-        await session.SaveChangesAsync();
-
         return new PickUpShipmentResponse(shipmentId, "InTransit", pickedUpAt);
     }
 }

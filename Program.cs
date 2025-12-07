@@ -42,7 +42,13 @@ builder.Services.AddWolverineHttp();
 
 // Add Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new() { Title = "Freight Shipping API", Version = "v1" }); });
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "Freight Shipping API", Version = "v1" });
+
+    // Use full namespace as part of schema ID to avoid naming conflicts
+    c.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
+});
 
 var app = builder.Build();
 

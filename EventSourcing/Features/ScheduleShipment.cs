@@ -22,9 +22,7 @@ public static class ScheduleShipmentHandler
 
         // Start a new event stream for the shipment aggregate
         session.Events.StartStream<FreightShipment>(shipmentId, @event);
-
-        await session.SaveChangesAsync();
-
+        
         return new ScheduleShipmentResponse(shipmentId, "Scheduled", scheduledAt);
     }
 }

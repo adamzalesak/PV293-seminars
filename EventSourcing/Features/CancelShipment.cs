@@ -24,8 +24,6 @@ public static class CancelShipmentHandler
         // Append the event to the existing stream
         session.Events.Append(shipmentId, @event);
 
-        await session.SaveChangesAsync();
-
         return new CancelShipmentResponse(shipmentId, "Cancelled", command.Reason, cancelledAt);
     }
 }
