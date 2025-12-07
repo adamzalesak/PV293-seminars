@@ -14,7 +14,8 @@ public record ShipmentDto(
     DateTime ScheduledAt,
     DateTime? PickedUpAt,
     DateTime? DeliveredAt,
-    DateTime? CancelledAt
+    DateTime? CancelledAt,
+    Guid? AssignedDriverId
 );
 
 public static class GetAllShipmentsHandler
@@ -32,7 +33,8 @@ public static class GetAllShipmentsHandler
                 s.ScheduledAt,
                 s.PickedUpAt,
                 s.DeliveredAt,
-                s.CancelledAt
+                s.CancelledAt,
+                s.AssignedDriverId
             ))
             .ToListAsync();
 
