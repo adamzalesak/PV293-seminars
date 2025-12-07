@@ -19,4 +19,9 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="DocumentDatabase\" />
+      <Folder Include="EventSourcing\Features\" />
+    </ItemGroup>
+
 </Project>

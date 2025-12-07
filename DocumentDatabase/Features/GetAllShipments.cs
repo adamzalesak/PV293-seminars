@@ -1,0 +1,42 @@
+using Marten;
+using Wolverine.Http;
+using FreightShippingTutorial.Models;
+
+namespace FreightShipping.Features;
+
+public record GetAllShipmentsQuery;
+
+public record ShipmentDto(
+    Guid Id,
+    string Origin,
+    string Destination,
+    ShipmentStatus Status,
+    DateTime ScheduledAt,
+    DateTime? PickedUpAt,
+    DateTime? DeliveredAt,
+    DateTime? CancelledAt
+);
+
+public static class GetAllShipmentsHandler
+{
+    [WolverineGet("/api/shipments")]
+    public static async Task<IReadOnlyCollection<ShipmentDto>> Handle(IQuerySession session)
+    {
+        var shipmentDtos = await session
+            .Query<FreightShipment>()
+            .Select(s => new ShipmentDto(
+                s.Id,
+                s.Origin,
+                s.Destination,
+                s.Status,
+                s.ScheduledAt,
+                s.PickedUpAt,
+                s.DeliveredAt,
+                s.CancelledAt
+            ))
+            .ToListAsync();
+
+
+        return shipmentDtos;
+    }
+}

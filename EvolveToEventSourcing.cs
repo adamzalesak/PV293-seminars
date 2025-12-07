@@ -1,4 +1,5 @@
 using FreightShipping.EventSourcedAggregate;
+using FreightShipping.EventSourcing.Aggregates.Shipment;
 using JasperFx;
 using Marten;
 
