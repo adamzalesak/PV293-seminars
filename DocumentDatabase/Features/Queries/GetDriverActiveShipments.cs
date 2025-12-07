@@ -1,8 +1,8 @@
-using FreightShippingTutorial.Models;
+using FreightShipping.DocumentDatabase.Models;
 using Marten;
 using Wolverine.Http;
 
-namespace FreightShipping.DocumentDatabase.Features;
+namespace FreightShipping.DocumentDatabase.Features.Queries;
 
 public record GetDriverActiveShipmentsQuery(Guid DriverId);
 

@@ -1,6 +1,6 @@
+using FreightShipping.EventSourcing.Aggregates.FreightShipment;
 using Marten;
 using Wolverine.Http;
-using FreightShipping.EventSourcing.Aggregates.Shipment;
 
 namespace FreightShipping.EventSourcing.Features;
 

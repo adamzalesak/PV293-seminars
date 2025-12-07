@@ -1,4 +1,4 @@
-namespace FreightShipping.EventSourcing.Aggregates.Shipment;
+namespace FreightShipping.EventSourcing.Aggregates.FreightShipment;
 
 public record ShipmentScheduled(Guid ShipmentId, string Origin, string Destination, DateTime ScheduledAt);
 public record ShipmentPickedUp(DateTime PickedUpAt);

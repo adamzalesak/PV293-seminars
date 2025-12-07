@@ -1,10 +1,12 @@
-using FreightShippingTutorial.Models;
+using FreightShipping.DocumentDatabase.Models;
 using Marten;
 using Wolverine.Http;
 
-namespace FreightShipping.DocumentDatabase.Features;
+namespace FreightShipping.DocumentDatabase.Features.Queries;
 
-public record GetShipmentsByDestinationResponse(
+public record GetAllShipmentsQuery;
+
+public record ShipmentDto(
     Guid Id,
     string Origin,
     string Destination,
@@ -16,17 +18,14 @@ public record GetShipmentsByDestinationResponse(
     Guid? AssignedDriverId
 );
 
-public static class GetShipmentsByDestinationHandler
+public static class GetAllShipmentsHandler
 {
-    [WolverineGet("/api/shipments/by-destination/{destination}")]
-    public static async Task<IReadOnlyCollection<GetShipmentsByDestinationResponse>> Handle(
-        string destination,
-        IQuerySession session)
+    [WolverineGet("/api/shipments")]
+    public static async Task<IReadOnlyCollection<ShipmentDto>> Handle(IQuerySession session)
     {
-        var shipments = await session
+        var shipmentDtos = await session
             .Query<FreightShipment>()
-            .Where(x => x.Destination == destination)
-            .Select(s => new GetShipmentsByDestinationResponse(
+            .Select(s => new ShipmentDto(
                 s.Id,
                 s.Origin,
                 s.Destination,
@@ -39,6 +38,7 @@ public static class GetShipmentsByDestinationHandler
             ))
             .ToListAsync();
 
-        return shipments;
+
+        return shipmentDtos;
     }
 }

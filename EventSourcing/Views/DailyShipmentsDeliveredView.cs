@@ -1,4 +1,4 @@
-using FreightShipping.EventSourcing.Aggregates.Shipment;
+using FreightShipping.EventSourcing.Aggregates.FreightShipment;
 using Marten.Events.Projections;
 
 namespace FreightShipping.EventSourcing.Views;

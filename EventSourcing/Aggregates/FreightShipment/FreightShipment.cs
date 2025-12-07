@@ -1,4 +1,4 @@
-namespace FreightShipping.EventSourcing.Aggregates.Shipment;
+namespace FreightShipping.EventSourcing.Aggregates.FreightShipment;
 
 public enum ShipmentStatus { Scheduled, InTransit, Delivered, Cancelled }
 

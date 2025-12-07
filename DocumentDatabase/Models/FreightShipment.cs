@@ -1,4 +1,4 @@
-namespace FreightShippingTutorial.Models;
+namespace FreightShipping.DocumentDatabase.Models;
 
 public enum ShipmentStatus { Scheduled, InTransit, Delivered, Cancelled }
 

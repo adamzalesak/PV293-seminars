@@ -1,8 +1,8 @@
-using FreightShippingTutorial.Models;
+using FreightShipping.DocumentDatabase.Models;
 using Marten;
 using Wolverine.Http;
 
-namespace FreightShipping.DocumentDatabase.Features;
+namespace FreightShipping.DocumentDatabase.Features.Commands;
 
 public record CreateDriverCommand(string Name, string LicenseNumber);
 
