@@ -2,14 +2,12 @@ using FreightShipping.EventSourcing.Aggregates.FreightShipment;
 using Marten;
 using Wolverine.Http;
 
-namespace FreightShipping.EventSourcing.Features;
-
-public record PickUpShipmentResponse(Guid ShipmentId, string Status, DateTime PickedUpAt);
+namespace FreightShipping.EventSourcing.Features.Commands;
 
 public static class PickUpShipmentHandler
 {
     [WolverinePost("/api/event-sourced/shipments/{shipmentId}/pickup")]
-    public static PickUpShipmentResponse Handle(
+    public static void Handle(
         Guid shipmentId,
         IDocumentSession session)
     {
@@ -19,7 +17,5 @@ public static class PickUpShipmentHandler
 
         // Append the event to the existing stream
         session.Events.Append(shipmentId, @event);
-
-        return new PickUpShipmentResponse(shipmentId, "InTransit", pickedUpAt);
     }
 }

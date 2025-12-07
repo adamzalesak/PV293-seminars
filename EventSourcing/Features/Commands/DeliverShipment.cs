@@ -2,15 +2,12 @@ using FreightShipping.EventSourcing.Aggregates.FreightShipment;
 using Marten;
 using Wolverine.Http;
 
-namespace FreightShipping.EventSourcing.Features;
+namespace FreightShipping.EventSourcing.Features.Commands;
 
-public record DeliverShipmentResponse(Guid ShipmentId, string Status, DateTime DeliveredAt);
-
-// Handler
 public static class DeliverShipmentHandler
 {
     [WolverinePost("/api/event-sourced/shipments/{shipmentId}/deliver")]
-    public static DeliverShipmentResponse Handle(
+    public static void Handle(
         Guid shipmentId,
         IDocumentSession session)
     {
@@ -20,7 +17,5 @@ public static class DeliverShipmentHandler
 
         // Append the event to the existing stream
         session.Events.Append(shipmentId, @event);
-
-        return new DeliverShipmentResponse(shipmentId, "Delivered", deliveredAt);
     }
 }

@@ -23,11 +23,9 @@ builder.Services.AddMarten(opts =>
 
     })
     .UseLightweightSessions()
-    // Turn on the async daemon in "Solo" mode
-    // there are other modes, but this is the simplest
-    .AddAsyncDaemon(DaemonMode.Solo)
+    .AddAsyncDaemon(DaemonMode.HotCold)
     .IntegrateWithWolverine()
-    .PublishEventsToWolverine("freightshipping-events");
+    .PublishEventsToWolverine("AllEvents");
     ;
 
 // Add Wolverine with HTTP endpoints

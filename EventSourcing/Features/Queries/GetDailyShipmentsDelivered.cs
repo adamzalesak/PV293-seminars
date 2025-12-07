@@ -1,8 +1,8 @@
+using FreightShipping.EventSourcing.Views;
 using Marten;
 using Wolverine.Http;
-using FreightShipping.EventSourcing.Views;
 
-namespace FreightShipping.EventSourcing.Features;
+namespace FreightShipping.EventSourcing.Features.Queries;
 
 public record GetDailyShipmentsDeliveredResponse(DailyShipmentsDto? DailyShipments);
 

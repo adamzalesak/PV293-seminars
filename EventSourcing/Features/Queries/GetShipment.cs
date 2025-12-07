@@ -2,7 +2,7 @@ using FreightShipping.EventSourcing.Aggregates.FreightShipment;
 using Marten;
 using Wolverine.Http;
 
-namespace FreightShipping.EventSourcing.Features;
+namespace FreightShipping.EventSourcing.Features.Queries;
 
 public record GetShipmentResponse(ShipmentDto? Shipment);
 
