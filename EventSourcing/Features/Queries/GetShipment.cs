@@ -10,12 +10,7 @@ public record ShipmentDto(
     Guid Id,
     string Origin,
     string Destination,
-    string Status,
-    DateTime ScheduledAt,
-    DateTime? PickedUpAt,
-    DateTime? DeliveredAt,
-    DateTime? CancelledAt,
-    string? CancellationReason
+    string Status
 );
 
 public static class GetShipmentHandler
@@ -25,6 +20,9 @@ public static class GetShipmentHandler
         Guid shipmentId,
         IQuerySession session)
     {
+        // TODO 2: Currently loading all events to get the current status.
+        // Create a SingleStreamProjection and load from a view model here (that is updated via events). 
+        
         // Aggregate the event stream to get current state
         var shipment = await session.Events.AggregateStreamAsync<FreightShipment>(shipmentId);
 
@@ -37,12 +35,7 @@ public static class GetShipmentHandler
             shipment.Id,
             shipment.Origin,
             shipment.Destination,
-            shipment.Status.ToString(),
-            shipment.ScheduledAt,
-            shipment.PickedUpAt,
-            shipment.DeliveredAt,
-            shipment.CancelledAt,
-            shipment.CancellationReason
+            shipment.Status.ToString()
         );
 
         return new GetShipmentResponse(dto);

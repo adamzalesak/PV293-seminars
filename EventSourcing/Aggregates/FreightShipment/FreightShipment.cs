@@ -47,4 +47,11 @@ public class FreightShipment
         current.CancellationReason = @event.Reason;
         return current;
     }
+
+    public static FreightShipment Apply(FreightShipment current, LocationRecorded @event)
+    {
+        // No state change needed in aggregate - location tracking is append-only
+        // The projection will handle building the route from all LocationRecorded events
+        return current;
+    }
 }

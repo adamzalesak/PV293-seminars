@@ -11,11 +11,6 @@ public static class DeliverShipmentHandler
         Guid shipmentId,
         IDocumentSession session)
     {
-        var deliveredAt = DateTime.UtcNow;
-
-        var @event = new ShipmentDelivered(deliveredAt);
-
-        // Append the event to the existing stream
-        session.Events.Append(shipmentId, @event);
+        // TODO 1: Implement this handler to deliver a shipment
     }
 }

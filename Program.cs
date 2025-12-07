@@ -19,7 +19,7 @@ builder.Services.AddMarten(opts =>
         opts.AutoCreateSchemaObjects = AutoCreate.All; // Dev mode: create tables if missing
         
         opts.Projections.Add<DailyShipmentsProjection>(ProjectionLifecycle.Async);
-        opts.Projections.Add<ShipmentViewProjection>(ProjectionLifecycle.Async);
+        opts.Projections.Add<ShipmentJourneyProjection>(ProjectionLifecycle.Async);
 
     })
     .UseLightweightSessions()

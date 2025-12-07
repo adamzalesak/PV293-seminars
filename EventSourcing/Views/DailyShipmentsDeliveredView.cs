@@ -25,7 +25,7 @@ public class DailyShipmentsProjection : MultiStreamProjection<DailyShipmentsDeli
         {
             Id = @event.DeliveredAt.ToString("yyyy-MM-dd"),
             DeliveredDate = DateOnly.FromDateTime(@event.DeliveredAt),
-            DeliveredCount = 1
+            DeliveredCount = 1,
         };
     }
 
