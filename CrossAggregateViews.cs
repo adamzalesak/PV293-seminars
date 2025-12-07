@@ -55,7 +55,7 @@ public static class CrossAggregateViews
         await using var session = store.LightweightSession();
         var lastWeek = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-7));
         
-        var stats = await session.Query<DailyShipmentsDelivered>()
+        var stats = await session.Query<DailyShipmentsDeliveredView>()
             .Where(x => x.DeliveredDate >= lastWeek)
             .OrderBy(x => x.Id)
             .ToListAsync();

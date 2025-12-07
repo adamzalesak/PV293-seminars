@@ -11,7 +11,7 @@ public record ScheduleShipmentResponse(Guid ShipmentId, string Status, DateTime 
 public static class ScheduleShipmentHandler
 {
     [WolverinePost("/api/event-sourced/shipments")]
-    public static async Task<ScheduleShipmentResponse> Handle(
+    public static ScheduleShipmentResponse Handle(
         ScheduleShipmentCommand command,
         IDocumentSession session)
     {

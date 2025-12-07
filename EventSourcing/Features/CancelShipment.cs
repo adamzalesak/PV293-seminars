@@ -12,7 +12,7 @@ public record CancelShipmentResponse(Guid ShipmentId, string Status, string Reas
 public static class CancelShipmentHandler
 {
     [WolverinePost("/api/event-sourced/shipments/{shipmentId}/cancel")]
-    public static async Task<CancelShipmentResponse> Handle(
+    public static CancelShipmentResponse Handle(
         Guid shipmentId,
         CancelShipmentCommand command,
         IDocumentSession session)
