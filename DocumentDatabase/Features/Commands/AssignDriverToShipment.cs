@@ -16,23 +16,8 @@ public static class AssignDriverToShipmentHandler
         AssignDriverToShipmentCommand command,
         IDocumentSession session)
     {
-        var shipment = await session.LoadAsync<FreightShipment>(shipmentId);
+        // TODO 1: Implement this handler to assign a driver to a shipment
 
-        if (shipment == null)
-        {
-            throw new InvalidOperationException($"Shipment with ID {shipmentId} not found");
-        }
-
-        var driver = await session.LoadAsync<Driver>(command.DriverId);
-
-        if (driver == null)
-        {
-            throw new InvalidOperationException($"Driver with ID {command.DriverId} not found");
-        }
-
-        shipment.AssignedDriverId = driver.Id;
-        session.Store(shipment);
-
-        return new AssignDriverToShipmentResponse(shipment.Id, driver.Id, driver.Name);
+        return new AssignDriverToShipmentResponse(Guid.NewGuid(), Guid.NewGuid(), "Driver Name");
     }
 }

@@ -20,7 +20,7 @@ public static class GetShipmentHandler
         Guid shipmentId,
         IQuerySession session)
     {
-        // TODO 2: Currently loading all events to get the current status.
+        // TODO 3: Currently loading all events to get the current status.
         // Create a SingleStreamProjection and load from a view model here (that is updated via events). 
         
         // Aggregate the event stream to get current state

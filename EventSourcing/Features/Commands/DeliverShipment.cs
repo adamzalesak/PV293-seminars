@@ -11,6 +11,6 @@ public static class DeliverShipmentHandler
         Guid shipmentId,
         IDocumentSession session)
     {
-        // TODO 1: Implement this handler to deliver a shipment
+        // TODO 2: Implement this handler to deliver a shipment
     }
 }
