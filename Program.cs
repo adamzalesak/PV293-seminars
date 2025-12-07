@@ -11,10 +11,12 @@ var connectionString = Utils.GetConnectionString();
 
 // Configure Marten with Wolverine integration
 builder.Services.AddMarten(opts =>
-{
-    opts.Connection(connectionString!);
-    opts.AutoCreateSchemaObjects = AutoCreate.All; // Dev mode: create tables if missing
-}).IntegrateWithWolverine();
+    {
+        opts.Connection(connectionString!);
+        opts.AutoCreateSchemaObjects = AutoCreate.All; // Dev mode: create tables if missing
+    })
+    .UseLightweightSessions()
+    .IntegrateWithWolverine();
 
 // Add Wolverine with HTTP endpoints
 builder.Host.UseWolverine(opts =>
@@ -30,10 +32,7 @@ builder.Services.AddWolverineHttp();
 
 // Add Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "Freight Shipping API", Version = "v1" });
-});
+builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new() { Title = "Freight Shipping API", Version = "v1" }); });
 
 var app = builder.Build();
 
