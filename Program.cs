@@ -4,6 +4,9 @@ using Wolverine;
 using Wolverine.Http;
 using Wolverine.Marten;
 using FreightShipping;
+using FreightShipping.EventSourcing.Views;
+using JasperFx.Events.Daemon;
+using JasperFx.Events.Projections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +17,15 @@ builder.Services.AddMarten(opts =>
     {
         opts.Connection(connectionString!);
         opts.AutoCreateSchemaObjects = AutoCreate.All; // Dev mode: create tables if missing
+        
+        opts.Projections.Add<DailyShipmentsProjection>(ProjectionLifecycle.Async);
+        opts.Projections.Add<ShipmentViewProjection>(ProjectionLifecycle.Async);
+
     })
     .UseLightweightSessions()
+    // Turn on the async daemon in "Solo" mode
+    // there are other modes, but this is the simplest
+    .AddAsyncDaemon(DaemonMode.Solo)
     .IntegrateWithWolverine();
 
 // Add Wolverine with HTTP endpoints
