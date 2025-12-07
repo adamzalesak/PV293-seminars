@@ -1,3 +1,4 @@
+using FreightShipping.EventSourcing.Aggregates.Shipment;
 using Marten;
 using Wolverine.Http;
 
