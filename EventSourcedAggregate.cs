@@ -1,3 +1,4 @@
+using FreightShippingTutorial.Models;
 using JasperFx;
 using JasperFx.Events.Projections;
 using Marten;

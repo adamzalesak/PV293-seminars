@@ -1,4 +1,5 @@
 using FreightShipping.EventSourcedAggregate;
+using FreightShippingTutorial.Models;
 using JasperFx;
 using JasperFx.Events.Daemon;
 using JasperFx.Events.Projections;
@@ -43,7 +44,7 @@ public static class ShipmentHandler
 {
     #region aggregate-handler
     [AggregateHandler]
-    public static IEnumerable<object> Handle(PickupShipment cmd, FreightShipment shipment)
+    public static IEnumerable<object> Handle(PickupShipment cmd, EventSourcedAggregate.FreightShipment shipment)
     {
         if (shipment.Status != ShipmentStatus.Scheduled)
             throw new InvalidOperationException("Cannot pick up unscheduled shipment");
