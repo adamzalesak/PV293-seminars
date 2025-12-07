@@ -1,3 +1,4 @@
+using FreightShippingTutorial.Models;
 using Wolverine.Http;
 
 namespace FreightShipping.Commands;

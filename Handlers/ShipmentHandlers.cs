@@ -2,6 +2,7 @@ using Marten;
 using Wolverine.Http;
 using FreightShipping.Commands;
 using FreightShipping.Queries;
+using FreightShippingTutorial.Models;
 
 namespace FreightShipping.Handlers;
 
@@ -27,7 +28,7 @@ public static class ShipmentHandlers
     }
 
     [WolverinePost("/api/shipments")]
-    public static async Task<CreateShipmentResponse> CreateShipment(
+    public static CreateShipmentResponse CreateShipment(
         CreateShipmentCommand command,
         IDocumentSession session)
     {
@@ -41,7 +42,6 @@ public static class ShipmentHandlers
         };
 
         session.Store(shipment);
-        await session.SaveChangesAsync();
 
         return new CreateShipmentResponse(shipment.Id, shipment.Status);
     }
@@ -75,7 +75,6 @@ public static class ShipmentHandlers
         }
 
         session.Store(shipment);
-        await session.SaveChangesAsync();
 
         return new UpdateShipmentStatusResponse(shipment.Id, shipment.Status);
     }

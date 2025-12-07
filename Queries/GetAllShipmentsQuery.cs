@@ -1,3 +1,5 @@
+using FreightShippingTutorial.Models;
+
 namespace FreightShipping.Queries;
 
 public record GetAllShipmentsQuery;
