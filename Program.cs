@@ -21,6 +21,8 @@ builder.Host.UseWolverine(opts =>
 {
     // Discover and register all HTTP endpoints
     opts.Discovery.IncludeAssembly(typeof(Program).Assembly);
+    // Enable Transactional Middleware for Marten
+    opts.Policies.AutoApplyTransactions();
 });
 
 // Add Wolverine HTTP

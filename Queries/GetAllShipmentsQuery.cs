@@ -4,7 +4,7 @@ namespace FreightShipping.Queries;
 
 public record GetAllShipmentsQuery;
 
-public record GetAllShipmentsResponse(List<ShipmentDto> Shipments);
+public record GetAllShipmentsResponse(IReadOnlyCollection<ShipmentDto> Shipments);
 
 public record ShipmentDto(
     Guid Id,

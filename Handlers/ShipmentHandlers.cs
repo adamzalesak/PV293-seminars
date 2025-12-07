@@ -11,18 +11,20 @@ public static class ShipmentHandlers
     [WolverineGet("/api/shipments")]
     public static async Task<GetAllShipmentsResponse> GetAllShipments(IQuerySession session)
     {
-        var shipments = await session.Query<FreightShipment>().ToListAsync();
+        var shipmentDtos = await session
+            .Query<FreightShipment>()
+            .Select(s => new ShipmentDto(
+                s.Id,
+                s.Origin,
+                s.Destination,
+                s.Status,
+                s.ScheduledAt,
+                s.PickedUpAt,
+                s.DeliveredAt,
+                s.CancelledAt
+            ))
+            .ToListAsync();
 
-        var shipmentDtos = shipments.Select(s => new ShipmentDto(
-            s.Id,
-            s.Origin,
-            s.Destination,
-            s.Status,
-            s.ScheduledAt,
-            s.PickedUpAt,
-            s.DeliveredAt,
-            s.CancelledAt
-        )).ToList();
 
         return new GetAllShipmentsResponse(shipmentDtos);
     }
