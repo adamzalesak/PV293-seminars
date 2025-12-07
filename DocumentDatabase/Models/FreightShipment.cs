@@ -12,4 +12,5 @@ public class FreightShipment
     public DateTime? PickedUpAt { get; set; }
     public DateTime? DeliveredAt { get; set; }
     public DateTime? CancelledAt { get; set; }
+    public Guid? AssignedDriverId { get; set; }
 }
