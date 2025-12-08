@@ -21,17 +21,18 @@ public static class RecordLocationHandler
         CancellationToken cancellationToken)
     {
         // Load the current aggregate state to validate business rules
-        var shipment = await session.Events.AggregateStreamAsync<FreightShipment>(shipmentId, token: cancellationToken);
-        if (shipment == null)
+        // BTW, why not use AggregateStreamAsync here and session.Events.Append below?
+        var shipment = await session.Events.FetchForWriting<FreightShipment>(shipmentId, cancellation: cancellationToken);
+        if (shipment.Aggregate == null)
         {
             return Results.NotFound($"Shipment {shipmentId} not found");
         }
 
         // Business rule: Location can only be recorded for shipments in transit
-        if (shipment.Status != ShipmentStatus.InTransit)
+        if (shipment.Aggregate.Status != ShipmentStatus.InTransit)
         {
             return Results.BadRequest(
-                $"Location can only be recorded for shipments in transit. Current status: {shipment.Status}");
+                $"Location can only be recorded for shipments in transit. Current status: {shipment.Aggregate.Status}");
         }
 
         var @event = new LocationRecorded(
@@ -42,7 +43,7 @@ public static class RecordLocationHandler
             command.Notes
         );
 
-        session.Events.Append(shipmentId, @event);
+        shipment.AppendOne(@event);
 
         return Results.Ok();
     }
