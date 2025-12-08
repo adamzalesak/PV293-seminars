@@ -24,7 +24,7 @@ Implement the handler to assign a driver to a shipment using the document databa
 - Save the updated shipment document
 - Return the correct response with shipment ID, driver ID, and driver name
 
-**Hint**: Use `IDocumentSession.LoadAsync<T>()` and `IDocumentSession.SaveChangesAsync()`
+**Hint**: Use `IDocumentSession.LoadAsync<T>()`
 
 ---
 
@@ -36,10 +36,10 @@ Implement the handler to deliver a shipment using event sourcing.
 
 **Requirements**:
 - Load the shipment aggregate from the event stream
+- Check whether the shipment can be delivered
 - Append a `ShipmentDelivered` event with the current timestamp
-- Save changes to persist the new event
 
-**Hint**: Use `IDocumentSession.Events.FetchForWriting<T>()` to load the aggregate and append events
+**Hint**: Use `IDocumentSession.Events.FetchForWriting<T>()` to load the aggregate and append events.
 
 ---
 
@@ -53,7 +53,7 @@ Implement the handler to deliver a shipment using event sourcing.
 Create a projection to optimize the `GetShipment` query instead of aggregating all events on every read.
 
 **Requirements**:
-1. Define `ShipmentView` properties (Id, Origin, Destination, Status)
+1. Define `ShipmentView` properties required for the GetShipment query
 2. Implement `ShipmentViewProjection` methods to handle events:
    - `Create()` for `ShipmentScheduled`
    - `Apply()` for `ShipmentPickedUp`
